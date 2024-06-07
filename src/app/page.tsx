@@ -1,27 +1,49 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import {
-    DropdownMenuTrigger,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuItem,
-    DropdownMenuContent,
-    DropdownMenu,
-} from '@/components/ui/dropdown-menu'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import AuthButton from '@/components/authbtn'
 
 export default function Home() {
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                get(name: string) {
+                    return cookieStore.get(name)?.value
+                },
+            },
+        }
+    )
+
+    const handleLogin = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: 'http://localhost:3000/auth/callback',
+            },
+        })
+        if (error) {
+            console.error('Error logging in:', error.message)
+            return
+        }
+        console.log('Logged in:', data)
+    }
     return (
-        <div className="flex h-full w-full flex-col">
+        <div className="flex h-full w-full flex-col border-amethyst-light">
             <header className="flex h-14 w-full max-w-[1500px] items-center self-center px-6 py-6">
                 <Link
                     href="#"
                     className="flex items-center justify-center"
                     prefetch={false}
                 >
-                    <h2 className="text-xl font-semibold text-grape">Aspire</h2>
+                    <h2 className="text-xl font-bold text-whisper">Aspire</h2>
                 </Link>
-                <div className="ml-auto flex items-center gap-2 text-xs">
+                <div className="ml-auto flex items-center gap-2 text-xs text-whisper">
                     <p>Created with</p>
                     <HeartIcon className="h-5 w-5 text-wisteria" />
                     <p>by</p>
@@ -35,24 +57,20 @@ export default function Home() {
                 </div>
             </header>
 
-            <section className="w-full border-y pt-12 md:pt-24 lg:pt-32">
+            <section className="w-full border-y py-28">
                 <div className="space-y-10 px-4 md:px-6 xl:space-y-16">
                     <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
-                        <div>
-                            <h1 className="lg:leading-tighter bg-gray-700 bg-clip-text text-3xl font-bold tracking-tighter text-transparent sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
+                        <div className="space-y-6">
+                            <h1 className="lg:leading-tighter bg-wisteria bg-clip-text text-3xl font-bold tracking-tighter text-transparent sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                                 The ultimate wishlist app for savvy shoppers
                             </h1>
-                            <p className="mx-auto max-w-[700px] text-amethyst-dark">
-                                Quirky Tagline
+                            <p className="mx-auto max-w-[700px] text-whisper">
+                                Discover new products, track prices, and share
+                                wishlists with friends. Sign up today and start
+                                saving time and money.
                             </p>
                             <div className="mt-6 space-x-4">
-                                <Link
-                                    href="/home/login"
-                                    className="dark:text-amethyst-foreground inline-flex h-9 items-center justify-center rounded-md bg-wisteria-light px-4 py-2 text-sm font-medium text-amethyst-translucent transition-all duration-150 hover:bg-amethyst-light hover:text-amethyst dark:bg-amethyst-dark"
-                                    prefetch={false}
-                                >
-                                    Sign Up / Login
-                                </Link>
+                                <AuthButton type="login" />
                             </div>
                         </div>
                         <div className="flex flex-col items-start space-y-4">
@@ -74,7 +92,7 @@ export default function Home() {
                         <h2 className="inline-block rounded-lg bg-wisteria-light px-3 py-1 text-sm dark:bg-gray-800">
                             Powered by Rust & WebAssembly
                         </h2>
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                        <h2 className="text-3xl font-bold tracking-tighter text-wisteria sm:text-5xl">
                             Supercharged Wishlist with Rust and WebAssembly
                         </h2>
                         <p className="max-w-[800px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -103,10 +121,10 @@ export default function Home() {
                         <div className="inline-block rounded-lg bg-wisteria-light px-3 py-1 text-sm dark:bg-gray-800">
                             Key Features
                         </div>
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                        <h2 className="text-3xl font-bold tracking-tighter text-wisteria sm:text-5xl">
                             Streamline your shopping experience
                         </h2>
-                        <p className="max-w-[900px] text-wisteria dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        <p className="max-w-[900px] text-whisper dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                             Wishlist App offers a suite of powerful features to
                             help you stay organized and get the best deals.
                         </p>
@@ -114,52 +132,54 @@ export default function Home() {
 
                     <div className="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">
+                            <h3 className="text-lg font-bold text-wisteria">
                                 Create Wishlists
                             </h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Easily create and manage wishlists for all your
                                 shopping needs.
                             </p>
                         </div>
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">
+                            <h3 className="text-lg font-bold text-wisteria">
                                 Share with Friends
                             </h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Collaborate with friends and family to find the
                                 perfect gifts.
                             </p>
                         </div>
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">Price Alerts</h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <h3 className="text-lg font-bold text-wisteria">
+                                Price Alerts
+                            </h3>
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Get notified when the items on your wishlist go
                                 on sale.
                             </p>
                         </div>
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">
+                            <h3 className="text-lg font-bold text-wisteria">
                                 Personalized Recommendations
                             </h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Discover new products based on your shopping
                                 history and interests.
                             </p>
                         </div>
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">
+                            <h3 className="text-lg font-bold text-wisteria">
                                 Cross-Platform Sync
                             </h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Access your wishlists from any device, anytime.
                             </p>
                         </div>
                         <div className="grid gap-1">
-                            <h3 className="text-lg font-bold">
+                            <h3 className="text-lg font-bold text-wisteria">
                                 Secure and Private
                             </h3>
-                            <p className="text-sm text-wisteria-dark dark:text-gray-400">
+                            <p className="text-sm text-whisper dark:text-gray-400">
                                 Your data is protected with industry-leading
                                 security measures.
                             </p>
@@ -168,7 +188,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <footer className="flex h-24 w-full items-center justify-center bg-columbiaBlue">
+            <footer className="flex h-24 w-full items-center justify-center bg-amethyst">
                 <p className="text-sm text-gray-800 dark:text-gray-400">
                     brxjonesdev @ 2024
                 </p>

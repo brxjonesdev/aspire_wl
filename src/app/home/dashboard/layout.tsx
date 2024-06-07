@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { ScrollArea } from '@/components/ui/scroll-area'
 
 import {
     DropdownMenuTrigger,
@@ -15,19 +14,7 @@ import {
     DropdownMenu,
 } from '@/components/ui/dropdown-menu'
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Switch } from '@/components/ui/switch'
-import ModalDrawer from '@/components/component/modalDrawer'
-import AddWishlist from '@/components/forms/add_wishlist'
-import AddWishlistBtn from '@/components/component/addWishlistBtn'
+import WishlistList from '@/components/dashboard/wishlist-list'
 
 export default async function DashboardLayout({
     children,
@@ -51,9 +38,13 @@ export default async function DashboardLayout({
     if (error || !data?.user) {
         redirect('/login')
     }
+
+    // get user data
+    const user = data?.user
+    console.log(user)
     return (
         <div className="flex h-screen w-full flex-col">
-            <header className="flex h-16 items-center justify-between bg-black-300 px-5 text-whisper dark:border-gray-800 dark:bg-gray-950">
+            <header className="flex h-20 items-center justify-between bg-black-300 px-5 text-whisper dark:border-gray-800 dark:bg-gray-950">
                 <Link
                     className="flex items-center gap-2"
                     href="/home/dashboard/"
@@ -71,20 +62,20 @@ export default async function DashboardLayout({
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
-                                className="h-8 w-8 rounded-full border border-gray-200 dark:border-gray-800"
+                                className="h-12 w-12 rounded-full border"
                                 size="icon"
                                 variant="ghost"
                             >
                                 <Image
                                     alt="Avatar"
                                     className="rounded-full"
-                                    height="32"
-                                    src="/placeholder.svg"
+                                    height="60"
+                                    src={user?.user_metadata.avatar_url}
                                     style={{
                                         aspectRatio: '32/32',
                                         objectFit: 'cover',
                                     }}
-                                    width="32"
+                                    width="60"
                                 />
                                 <span className="sr-only">
                                     Toggle user menu
@@ -102,63 +93,12 @@ export default async function DashboardLayout({
                     </DropdownMenu>
                 </div>
             </header>
-            <div className="flex h-full rounded-lg">
-                <nav className="hidden w-80 flex-col space-y-10 border-r bg-black-500 p-4 md:flex">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Your Lists</CardTitle>
-                            <CardDescription>Lists made by You</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ScrollArea className="h-[250px]">
-                                <section className="space-y-4">
-                                    <div className="rounded-md bg-wisteria-light p-3">
-                                        <h2 className="font-semibold">
-                                            Braxton's EDC 2.0
-                                        </h2>
-                                        <p className="text-sm">
-                                            This is a list of items that I would
-                                            like to have in my everyday carry.
-                                        </p>
-                                    </div>
-                                </section>
-                            </ScrollArea>
-                        </CardContent>
-                        <CardFooter>
-                            <AddWishlistBtn />
-                        </CardFooter>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-md">
-                                Wishlist Summary
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="m-0 px-2">
-                            <ScrollArea className="h-[250px] py-1">
-                                <section className="space-y-4">
-                                    <div className="w-full space-y-3 rounded-md bg-celeste-light p-3">
-                                        <h2 className="font-semibold">
-                                            Braxton's EDC 2.0
-                                        </h2>
-                                        <p className="text-sm">
-                                            This is a list of items that I would
-                                            like to have in my everyday carry.
-                                        </p>
-                                        <div className="flex gap-2 text-sm">
-                                            <p>Total Cost:</p>
-                                            <p>$200.00</p>
-                                        </div>
-                                        <Progress
-                                            value={50}
-                                            className="h-2 rounded-md bg-columbiaBlue"
-                                        />
-                                    </div>
-                                </section>
-                            </ScrollArea>
-                        </CardContent>
-                    </Card>
+            <div className="flex h-full rounded-lg flex-col md:flex-row">
+                <nav className="hidden min-w-96 flex-col space-y-10 border-r border-amethyst-dark bg-amethyst-light p-4 md:flex">
+                    <WishlistList />
+                </nav>
+                <nav className="h-20 flex-col space-y-10 border-r border-amethyst-dark bg-amethyst-light p-4 md:hidden w-full">
+                  <p>Hello</p>
                 </nav>
                 {children}
             </div>
@@ -184,7 +124,6 @@ function HeartIcon(props) {
         </svg>
     )
 }
-
 function ListIcon(props) {
     return (
         <svg
@@ -208,7 +147,6 @@ function ListIcon(props) {
         </svg>
     )
 }
-
 function PlusIcon(props) {
     return (
         <svg
@@ -228,7 +166,6 @@ function PlusIcon(props) {
         </svg>
     )
 }
-
 function ShareIcon(props) {
     return (
         <svg

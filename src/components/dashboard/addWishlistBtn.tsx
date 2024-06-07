@@ -1,6 +1,7 @@
 'use client'
-import React from 'react'
-import { Formik, Form, useField, ErrorMessage, Field } from 'formik'
+import { createBrowserClient } from '@supabase/ssr'
+import React, { useState } from 'react'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import {
     Dialog,
@@ -10,23 +11,33 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { AddWishlist } from '@/utils/dashboard/wishlist-utils'
+
+type addWishlistProps = {
+    values: {
+        wishlistName: string
+        wishlistDescription: string
+    }
+}
 
 export default function AddWishlistBtn() {
     const [isOpen, setIsOpen] = useState(false)
+    const [wishlists, setWishlists] = useState([])
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    async function AddWishlist({ values }: addWishlistProps) {
+       
+    }
+
     return (
-        <Dialog
-            open={isOpen}
-            onOpenChange={(isOpen) => {
-                setIsOpen(isOpen)
-            }}
-        >
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger
-                className="w-full rounded-md bg-black-300 py-3 text-whisper hover:bg-amethyst-dark"
+                className="w-full rounded-md bg-wisteria py-3 text-black hover:bg-amethyst-light"
                 disabled={isOpen}
-                onClick={() => {
-                    setIsOpen(true)
-                }}
+                onClick={() => setIsOpen(true)}
             >
                 + New Wishlist
             </DialogTrigger>
@@ -44,7 +55,7 @@ export default function AddWishlistBtn() {
                         wishlistDescription: '',
                     }}
                     validationSchema={Yup.object({
-                        wishListName: Yup.string()
+                        wishlistName: Yup.string()
                             .max(15, 'Must be 15 characters or less')
                             .required('Name is required'),
                         wishlistDescription: Yup.string().max(
@@ -53,8 +64,10 @@ export default function AddWishlistBtn() {
                         ),
                     })}
                     onSubmit={(values, { setSubmitting }) => {
-                        console.log(values)
+                        // Handle form submission here
                         setSubmitting(false)
+                        console.log(values)
+                        AddWishlist({ values })
                     }}
                 >
                     <Form>
@@ -70,7 +83,7 @@ export default function AddWishlistBtn() {
                                     name="wishlistName"
                                     type="text"
                                     placeholder="Enter Wishlist Name"
-                                    className="mt-1 w-full rounded-md border bg-wisteria-light p-2 text-whisper"
+                                    className="mt-1 w-full rounded-md border bg-black-400 p-2 text-whisper"
                                 />
                             </div>
                             <ErrorMessage
@@ -92,7 +105,7 @@ export default function AddWishlistBtn() {
                                     name="wishlistDescription"
                                     as="textarea"
                                     placeholder="Enter Wishlist Description"
-                                    className="mt-1 w-full rounded-md border bg-wisteria-light p-2 text-whisper"
+                                    className="mt-1 w-full rounded-md border bg-black-400 p-2 text-whisper"
                                 />
                             </div>
                             <ErrorMessage

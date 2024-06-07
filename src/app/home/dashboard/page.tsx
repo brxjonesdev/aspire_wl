@@ -10,13 +10,32 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import AddItemBtn from '@/components/component/addItemBtn'
-
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function Dashboard() {
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                get(name: string) {
+                    return cookieStore.get(name)?.value
+                },
+            },
+        }
+    )
+
+    const wishlists = []
+
     return (
         <main className="flex flex-1 flex-col p-6">
             <div className="mx-auto my-auto w-full max-w-xl">
-                <Card>
+                {wishlists.length > 0 ? (<Card>
                     <CardHeader>
                         <CardTitle>Add New Item</CardTitle>
                         <CardDescription>
@@ -29,10 +48,31 @@ export default async function Dashboard() {
                     <CardFooter className="flex flex-col space-y-3">
                         <Button className="w-full">Add Item</Button>
                         <div className="w-full text-right">
-                            <AddItemBtn/>
+                            <AddItemBtn />
                         </div>
                     </CardFooter>
-                </Card>
+                </Card>) : (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Welcome to your  Aspire dashboard!</CardTitle>
+                            <CardDescription>
+                                You don&apos;t have any wishlists yet. Create one to get started!
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className=''>
+                                <p>
+                                    This app is a work in progress. You can create a wishlist to keep track of your present and future purchases. 
+                                    I want to add browser plugins to make it easier to add items to your wishlist in the near future.
+                                </p>
+                                <Link href={"https://brx-portfolio.vercel.app/"} className='text-celeste-dark hover:text-wisteria text-right mt-2'>
+                                - brxjonesdev
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+                
             </div>
         </main>
     )
