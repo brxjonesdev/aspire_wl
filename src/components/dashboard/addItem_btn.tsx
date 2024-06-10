@@ -7,6 +7,7 @@ import { ItemProps } from '@/app/home/dashboard/wishlist/[wishlistID]/page'
 import { WishlistProps } from '../sidebar/wishlist-list'
 import { useState } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
+import { nanoid } from 'nanoid'
 
 export default function AddItemBtn({
     wishlist,
@@ -25,7 +26,9 @@ export default function AddItemBtn({
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     async function addItem(values: ItemProps) {
+        const itemID = `item_${nanoid(20)}`
         const newItem: ItemProps = {
+            item_id: itemID,
             name: values.name,
             description: values.description,
             price: values.price,

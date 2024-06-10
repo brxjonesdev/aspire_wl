@@ -30,10 +30,12 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useEffect, useState } from 'react'
 
+
 export type ItemProps = {
-    name: string
-    price: number
-    url: string
+    item_id?: string,
+    name?: string
+    price?: number
+    url?: string
     photo?: string
     description?: string
     priority?: 'P1' | 'P2' | 'P3'
@@ -160,19 +162,24 @@ export default function WishlistPage() {
                     {selectedWishlist && items.length > 0 && (
                         <ul className="grid h-full gap-6 overflow-x-scroll rounded-md bg-black-500 p-4 md:grid-cols-2  xl:grid-cols-4">
                             {items.map((item) => (
-                               <WishlistItem key={item.name} item={item} />
+                               <WishlistItem 
+                               key={item.name} 
+                               item={item}
+                               items={items}
+                                setItems={setItems}
+                                />
                             ))}
                         </ul>
                     )}
 
-                    {/* {items.length > 0 && (
+                    {items.length <= 0 && (
                         // > Greater than 0
                         <div className="flex flex-grow items-center justify-center rounded-md bg-black-500">
                             <p className="text-2xl text-gray-500 dark:text-gray-400">
                                 No items in this wishlist
                             </p>
                         </div>
-                    )} */}
+                    )}
                 </div>
             </div>
         </section>

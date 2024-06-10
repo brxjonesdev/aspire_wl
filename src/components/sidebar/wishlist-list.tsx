@@ -49,16 +49,6 @@ export default function WishlistList() {
             <CardContent className="flex max-h-full flex-col space-y-4 pb-10 text-black-400">
                 <AddWishlistBtn />
                 <section className="flex flex-col gap-4 overflow-scroll pb-20 pt-5">
-                    {wishlists.length === 0 && (
-                        <section className="mx-auto">
-                            <div className="flex gap-4">
-                                <Spinner />
-                                <h2 className="text-center text-2xl font-bold text-wisteria">
-                                    Loading...
-                                </h2>
-                            </div>
-                        </section>
-                    )}
                     {wishlists.map((wishlist) => (
                         <Wishlist
                             key={wishlist.wishlist_id}
@@ -69,6 +59,11 @@ export default function WishlistList() {
                             createdAt={wishlist.createdAt}
                         />
                     ))}
+                     {wishlists && wishlists.length === 0 && (<div>
+                        <p className="text-center text-lg font-semibold text-whisper">
+                            No Wishlists Yet.
+                        </p>
+                     </div>)}
                 </section>
             </CardContent>
         </Card>
