@@ -2,8 +2,10 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 import { Button } from './ui/button'
+import { useRouter } from 'next/navigation'
 
 export default function AuthButton({ type }: { type: 'login' | 'logout' }) {
+    const router = useRouter()
     const supabase = createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -29,6 +31,7 @@ export default function AuthButton({ type }: { type: 'login' | 'logout' }) {
             console.error('Error logging out:', error.message)
             return
         }
+        router.push('/')
         console.log('Logged out')
     }
 

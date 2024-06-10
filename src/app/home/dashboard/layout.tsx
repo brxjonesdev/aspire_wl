@@ -14,7 +14,8 @@ import {
     DropdownMenu,
 } from '@/components/ui/dropdown-menu'
 
-import WishlistList from '@/components/dashboard/wishlist-list'
+import WishlistList from '@/components/sidebar/wishlist-list'
+import AuthButton from '@/components/authbtn'
 
 export default async function DashboardLayout({
     children,
@@ -41,7 +42,6 @@ export default async function DashboardLayout({
 
     // get user data
     const user = data?.user
-    console.log(user)
     return (
         <div className="flex h-screen w-full flex-col">
             <header className="flex h-20 items-center justify-between bg-black-300 px-5 text-whisper dark:border-gray-800 dark:bg-gray-950">
@@ -83,22 +83,30 @@ export default async function DashboardLayout({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel>Menu</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
+
+                            <DropdownMenuItem>
+                                <Link
+                                    href={`https://github.com/brxjonesdev/aspire_wl`}
+                                >
+                                    Github Repo
+                                </Link>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <AuthButton type="logout" />
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
             </header>
-            <div className="flex h-full rounded-lg flex-col md:flex-row">
-                <nav className="hidden min-w-96 flex-col space-y-10 border-r border-amethyst-dark bg-amethyst-light p-4 md:flex">
+            <div className="flex h-full flex-col overflow-hidden md:flex-row">
+                <nav className="hidden min-w-96 flex-col space-y-10 rounded-r-2xl border-r border-amethyst-dark bg-amethyst-light p-4 md:flex">
                     <WishlistList />
                 </nav>
-                <nav className="h-20 flex-col space-y-10 border-r border-amethyst-dark bg-amethyst-light p-4 md:hidden w-full">
-                  <p>Hello</p>
+                <nav className="h-20 w-full flex-col space-y-10 border-r border-amethyst-dark bg-amethyst-light p-4 md:hidden">
+                    <p>Hello</p>
                 </nav>
                 {children}
             </div>

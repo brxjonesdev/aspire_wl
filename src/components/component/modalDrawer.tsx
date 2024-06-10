@@ -1,3 +1,4 @@
+'use client'
 import React, { ReactNode } from 'react'
 import {
     Drawer,
@@ -18,20 +19,32 @@ import {
     DialogTrigger,
 } from '../ui/dialog'
 import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
 type ModalInfoProps = {
     trigger: ReactNode
     title: string
     content: ReactNode
+    isDialogOpen: boolean
+    setIsDialogOpen: (isOpen: boolean) => void
+    isDrawerOpen: boolean
+    setIsDrawerOpen: (isOpen: boolean) => void
 }
 export default function ModalDrawer({
     trigger,
     title,
     content,
+    isDialogOpen,
+    setIsDialogOpen,
+    isDrawerOpen,
+    setIsDrawerOpen,
 }: ModalInfoProps) {
     return (
-        <section className="w-full text-black">
-            <Dialog>
+        <>
+            <Dialog
+                open={isDialogOpen}
+                onOpenChange={(isDialogOpen) => setIsDialogOpen(isDialogOpen)}
+            >
                 <DialogTrigger className="hidden sm:block">
                     {trigger}
                 </DialogTrigger>
@@ -42,8 +55,11 @@ export default function ModalDrawer({
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
-            <Drawer>
-                <DrawerTrigger className="block w-full sm:hidden">
+            <Drawer
+                open={isDrawerOpen}
+                onOpenChange={(isDrawerOpen) => setIsDrawerOpen(isDrawerOpen)}
+            >
+                <DrawerTrigger className="block sm:hidden">
                     {trigger}
                 </DrawerTrigger>
                 <DrawerContent className="text-black-100">
@@ -63,6 +79,6 @@ export default function ModalDrawer({
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
-        </section>
+        </>
     )
 }

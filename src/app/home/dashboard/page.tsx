@@ -34,8 +34,30 @@ export default async function Dashboard() {
 
     return (
         <main className="flex flex-1 flex-col p-6">
-            <div className="mx-auto my-auto w-full max-w-xl">
-                {wishlists.length > 0 ? (<Card>
+            <div className="mx-auto my-auto w-full max-w-xl space-y-5">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Welcome to your Aspire dashboard!</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="">
+                            <p>
+                                This app is a work in progress. You can create a
+                                wishlist to keep track of your present and
+                                future purchases. I want to add browser plugins
+                                to make it easier to add items to your wishlist
+                                in the near future.
+                            </p>
+                            <Link
+                                href={'https://brx-portfolio.vercel.app/'}
+                                className="mt-2 text-right text-celeste-dark hover:text-wisteria"
+                            >
+                                - brxjonesdev
+                            </Link>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
                     <CardHeader>
                         <CardTitle>Add New Item</CardTitle>
                         <CardDescription>
@@ -51,28 +73,7 @@ export default async function Dashboard() {
                             <AddItemBtn />
                         </div>
                     </CardFooter>
-                </Card>) : (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Welcome to your  Aspire dashboard!</CardTitle>
-                            <CardDescription>
-                                You don&apos;t have any wishlists yet. Create one to get started!
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className=''>
-                                <p>
-                                    This app is a work in progress. You can create a wishlist to keep track of your present and future purchases. 
-                                    I want to add browser plugins to make it easier to add items to your wishlist in the near future.
-                                </p>
-                                <Link href={"https://brx-portfolio.vercel.app/"} className='text-celeste-dark hover:text-wisteria text-right mt-2'>
-                                - brxjonesdev
-                                </Link>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-                
+                </Card>
             </div>
         </main>
     )

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
+import WishlistContextProvider from './wishlistContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,8 +19,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <main className="flex h-screen flex-col items-center justify-center bg-black-200">
-                    <ThemeProvider>{children}</ThemeProvider>
+                <main className="flex flex-col items-center justify-center bg-black-200">
+                    <WishlistContextProvider>
+                        {children}
+                    </WishlistContextProvider>
                 </main>
             </body>
         </html>

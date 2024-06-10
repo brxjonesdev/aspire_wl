@@ -1,195 +1,243 @@
 'use client'
 import React from 'react'
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import Link from "next/link"
+import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useContext } from 'react'
+import { WishlistContext } from '@/app/wishlistContext'
+import { useParams } from 'next/navigation'
+import { createBrowserClient } from '@supabase/ssr'
+import { useRouter } from 'next/navigation'
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover'
+import AddItemBtn from '@/components/dashboard/addItem_btn'
+import WishlistItem from '@/components/dashboard/item'
+import EditWishlistBtn from '@/components/dashboard/editWishlist_btn'
+import ModalDrawer from '@/components/component/modalDrawer'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { useEffect, useState } from 'react'
 
-export default function page() {
-    const wishlistItems = [
-        {
-          id: 1,
-          image: "/placeholder.svg",
-          name: "Cozy Knit Sweater",
-          description: "A soft and stylish sweater perfect for chilly days.",
-          price: 59.99,
-        },
-        {
-          id: 2,
-          image: "/placeholder.svg",
-          name: "Leather Backpack",
-          description: "A durable and versatile backpack for everyday use.",
-          price: 99.99,
-        },
-        {
-          id: 3,
-          image: "/placeholder.svg",
-          name: "Noise-Cancelling Headphones",
-          description: "High-quality headphones that block out external noise.",
-          price: 149.99,
-        },
-        // {
-        //   id: 4,
-        //   image: "/placeholder.svg",
-        //   name: "Outdoor Adventure Tent",
-        //   description: "A spacious and weatherproof tent for camping trips.",
-        //   price: 199.99,
-        // },
-        // {
-        //     id: 5,
-        //     image: "/placeholder.svg",
-        //     name: "Smart Fitness Watch",
-        //     description: "A sleek and feature-packed watch to track your workouts.",
-        //     price: 249.99,
-        // },
-        // {
-        //     id: 6,
-        //     image: "/placeholder.svg",
-        //     name: "Professional Camera Kit",
-        //     description: "A complete camera kit for capturing stunning photos and videos.",
-        //     price: 499.99,
-        // },
-        // {
-        //     id: 7,
-        //     image: "/placeholder.svg",
-        //     name: "Home Theater System",
-        //     description: "A premium sound system for an immersive home theater experience.",
-        //     price: 799.99,
-        // },
-        // {
-        //     id: 8,
-        //     image: "/placeholder.svg",
-        //     name: "Luxury Smartwatch",
-        //     description: "A luxury smartwatch with advanced features and elegant design.",
-        //     price: 999.99,
-        // }
-      ]
-      const handleRemoveFromWishlist = (id) => {
-        console.log(`Removing item with ID ${id} from wishlist`)
-      }
-  return (
-    <section className="w-full py-12">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-8">
-          <div className="flex items-center justify-between">
-            <div className="grid gap-2">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-wisteria">My Wishlist</h1>
-              <p className="text-gray-500 dark:text-gray-400">These are the items I'd like to purchase.</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href="/home/dashboard/"
-                className="inline-flex h-9 items-center justify-center rounded-md border-none  bg-wisteria-light px-4 text-sm font-medium shadow-sm hover:bg-wisteria "
-                prefetch={false}
-              >
-                <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                Back to Home
-              </Link>
-              <Button variant="ghost" size="icon" className='bg-amethyst hover:bg-amethyst-light'>
-                <ShareIcon className="h-4 w-4" />
-                <span className="sr-only">Share</span>
-              </Button>
-              <Button variant="ghost" size="icon" className='bg-amethyst hover:bg-amethyst-light'>
-                <FilePenIcon className="h-4 w-4" />
-                <span className="sr-only">Edit Wishlist</span>
-              </Button>
-            </div>
-          </div>
-          <ul className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {wishlistItems.map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-col items-start gap-4 rounded-lg border border-gray-200 p-4 dark:border-gray-800 text-wisteria"
-              >
-                <Image
-                  src="/placeholder.svg"
-                  alt={item.name}
-                  width={300}
-                  height={300}
-                  className="aspect-square w-full rounded-lg object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
-                  <div className="mt-2 font-semibold">${item.price}</div>
-                </div>
-                <div className='text-black-100 grid grid-cols-2 gap-4'>
-                <Button variant="outline" size="sm" className='bg-celeste-dark hover:bg-celeste border-none'>
-                    Edit
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => handleRemoveFromWishlist(item.id)} className='border-none bg-wisteria-dark'>
-                  Remove
-                </Button>
-
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  )
+export type ItemProps = {
+    name: string
+    price: number
+    url: string
+    photo?: string
+    description?: string
+    priority?: 'P1' | 'P2' | 'P3'
+    parent_wishlist?: string
 }
 
-function ArrowLeftIcon(props) {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="m12 19-7-7 7-7" />
-        <path d="M19 12H5" />
-      </svg>
+export default function WishlistPage() {
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
-  }
-  
-  
-  function FilePenIcon(props) {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10" />
-        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-        <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z" />
-      </svg>
+    const router = useRouter()
+    const { wishlists, setWishlists } = useContext(WishlistContext)
+    const { wishlistID } = useParams()
+    const selectedWishlist = wishlists.find(
+        (wishlist) => wishlist.wishlist_id === wishlistID
     )
-  }
-  
-  
-  function ShareIcon(props) {
+
+    const [items, setItems] = useState<ItemProps[]>([])
+
+    useEffect(() => {
+        async function fetchItems() {
+            const { data, error } = await supabase
+                .from('Items')
+                .select('*')
+                .eq('parent_wishlist', wishlistID)
+            if (error) {
+                console.error(error)
+                return
+            }
+            setItems(data)
+        }
+        fetchItems()
+    }, [])
+
+    const deleteWishlist = async () => {
+        const { error } = await supabase
+            .from('Wishlists')
+            .delete()
+            .eq('wishlist_id', wishlistID)
+        if (error) {
+            console.error(error)
+            return
+        }
+        setWishlists((prev) =>
+            prev.filter((item) => item.wishlist_id !== wishlistID)
+        )
+        router.push('/home/dashboard/')
+    }
+
     return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-        <polyline points="16 6 12 2 8 6" />
-        <line x1="12" x2="12" y1="2" y2="15" />
-      </svg>
+        <section className="h-full w-full py-12">
+            <div className="h-full px-4 md:px-6">
+                <div className="flex h-full flex-col gap-6">
+                    <div className="flex w-full flex-col items-center justify-between gap-3 xl:flex-row">
+                        <div className="grid w-full gap-2">
+                            <h1 className="text-3xl font-bold tracking-tight text-wisteria sm:text-4xl">
+                                {selectedWishlist?.name || 'Loading...'}
+                            </h1>
+                            <p className="text-gray-500 dark:text-gray-400">
+                                {selectedWishlist?.description}
+                            </p>
+                        </div>
+                        <div className="flex w-full xl:justify-end">
+                            <div className="flex gap-3">
+                                <AddItemBtn
+                                    wishlist={selectedWishlist}
+                                    items={items}
+                                    setItems={setItems}
+                                />
+                                <Popover>
+                                    <PopoverTrigger className="h-10 w-10">
+                                        <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-amethyst hover:bg-amethyst-light">
+                                            <ShareIcon className="h-4 w-4" />
+                                            <span className="sr-only">
+                                                Share
+                                            </span>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-fit">
+                                        This feature is coming soon!
+                                    </PopoverContent>
+                                </Popover>
+
+                                <EditWishlistBtn wishlist={selectedWishlist} />
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                        <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-amethyst hover:bg-amethyst-light">
+                                            <TrashIcon className="h-4 w-4" />
+                                            <span className="sr-only">
+                                                Delete
+                                            </span>
+                                        </div>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Are you absolutely sure?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                                This will permanently delete
+                                                this wishlist and all of its
+                                                items from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction
+                                                className="bg-wisteria text-black-200 hover:bg-wisteria-dark"
+                                                onClick={deleteWishlist}
+                                            >
+                                                Yes, delete.
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        </div>
+                    </div>
+
+                    {selectedWishlist && items.length > 0 && (
+                        <ul className="grid h-full gap-6 overflow-x-scroll rounded-md bg-black-500 p-4 md:grid-cols-2  xl:grid-cols-4">
+                            {items.map((item) => (
+                               <WishlistItem key={item.name} item={item} />
+                            ))}
+                        </ul>
+                    )}
+
+                    {/* {items.length > 0 && (
+                        // > Greater than 0
+                        <div className="flex flex-grow items-center justify-center rounded-md bg-black-500">
+                            <p className="text-2xl text-gray-500 dark:text-gray-400">
+                                No items in this wishlist
+                            </p>
+                        </div>
+                    )} */}
+                </div>
+            </div>
+        </section>
     )
-  }
+}
+
+function ArrowLeftIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+        </svg>
+    )
+}
+
+function ShareIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+            <polyline points="16 6 12 2 8 6" />
+            <line x1="12" x2="12" y1="2" y2="15" />
+        </svg>
+    )
+}
+
+function TrashIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M6 6V21a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V6" />
+            <path d="M10 3L10 6" />
+            <path d="M14 3L14 6" />
+        </svg>
+    )
+}
