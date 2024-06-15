@@ -15,7 +15,7 @@ export default function AuthButton({ type }: { type: 'login' | 'logout' }) {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:3000/auth/callback',
+                redirectTo: 'https://aspire-brx.netlify.app/auth/callback',
             },
         })
         if (error) {
