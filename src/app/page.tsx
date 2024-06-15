@@ -25,7 +25,7 @@ export default function Home() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://aspire-wl.netlify.app/auth/callback',
+                redirectTo: 'https://aspire-brx.netlify.app/auth/callback',
             },
         })
         if (error) {
