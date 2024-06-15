@@ -7,7 +7,7 @@ export type AppState = {
         avatar: string
         name: string
         description?: string
-        items?: {
+        items: {
             id: string
             name: string
             url: string
@@ -20,10 +20,7 @@ export type AppState = {
 export type AppStateActions = {
     toggleView: (view: 'list' | 'grid') => void
     addWishlist: (wishlist: AppState['wishlists'][0]) => void
-    addItem: (
-        wishlistId: string,
-        item: AppState['wishlists'][0]['items'][0]
-    ) => void
+    addItem: (wishlistId: string, item: AppState['wishlists'][0]['items'][0]) => void
 }
 
 export const useAppState = createStore<AppState & AppStateActions>((set) => ({
