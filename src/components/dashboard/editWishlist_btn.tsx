@@ -130,7 +130,7 @@ export default function EditWishlistBtn({
     )
 }
 
-function FilePenIcon(props) {
+function FilePenIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

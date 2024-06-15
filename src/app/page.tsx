@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import AuthButton from '@/components/authbtn'
+import { JSX, SVGProps } from 'react'
 
 export default function Home() {
     const cookieStore = cookies()
@@ -86,7 +87,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="w-full border-y pb-12 pt-12 md:pt-24 lg:pt-32">
+            {/* <section className="w-full border-y pb-12 pt-12 md:pt-24 lg:pt-32">
                 <div className="flex flex-col items-center space-y-10 px-4 md:px-6 xl:space-y-16">
                     <div className="flex flex-col items-center space-y-4 text-center">
                         <h2 className="inline-block rounded-lg bg-wisteria-light px-3 py-1 text-sm dark:bg-gray-800">
@@ -113,7 +114,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <section className="w-full py-12 md:py-24 lg:py-32">
                 <div className="space-y-12 px-4 md:px-6">
@@ -197,7 +198,7 @@ export default function Home() {
     )
 }
 
-function HeartIcon(props) {
+function HeartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -216,7 +217,7 @@ function HeartIcon(props) {
     )
 }
 
-function WebcamIcon(props) {
+function WebcamIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -238,7 +239,7 @@ function WebcamIcon(props) {
     )
 }
 
-function WrenchIcon(props) {
+function WrenchIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

@@ -16,6 +16,7 @@ import {
 
 import WishlistList from '@/components/sidebar/wishlist-list'
 import AuthButton from '@/components/authbtn'
+import { JSX, SVGProps } from 'react'
 
 export default async function DashboardLayout({
     children,
@@ -114,7 +115,7 @@ export default async function DashboardLayout({
     )
 }
 
-function HeartIcon(props) {
+function HeartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -132,7 +133,7 @@ function HeartIcon(props) {
         </svg>
     )
 }
-function ListIcon(props) {
+function ListIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -155,7 +156,7 @@ function ListIcon(props) {
         </svg>
     )
 }
-function PlusIcon(props) {
+function PlusIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -174,7 +175,7 @@ function PlusIcon(props) {
         </svg>
     )
 }
-function ShareIcon(props) {
+function ShareIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -194,7 +195,7 @@ function ShareIcon(props) {
         </svg>
     )
 }
-function Grid3x3Icon(props) {
+function Grid3x3Icon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

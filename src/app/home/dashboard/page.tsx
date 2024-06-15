@@ -1,19 +1,16 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import AddItemBtn from '@/components/component/addItemBtn'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
+// import { Formik, Form, Field, ErrorMessage } from 'formik'
+// import * as Yup from 'yup'
+// import ScrapeProduct from '@/components/component/scrapeProduct'
 
 export default async function Dashboard() {
     const cookieStore = cookies()
@@ -29,9 +26,6 @@ export default async function Dashboard() {
             },
         }
     )
-
-    const wishlists = []
-
     return (
         <main className="flex flex-1 flex-col p-6">
             <div className="mx-auto my-auto w-full max-w-xl space-y-5">
@@ -40,13 +34,15 @@ export default async function Dashboard() {
                         <CardTitle>Welcome to your Aspire dashboard!</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="">
+                        <div className="space-y-2">
                             <p>
-                                This app is a work in progress. You can create a
-                                wishlist to keep track of your present and
-                                future purchases. I want to add browser plugins
-                                to make it easier to add items to your wishlist
+                                This app is a work in progress. You can create a wishlist to keep track of your present and
+                                future purchases. I want to add browser plugins to make it easier to add items to your wishlist
                                 in the near future.
+                            </p>
+                            <p>
+                                I&apos;m also working on a feature to scrape product information from websites to make adding items
+                                to your wishlist even easier. Of course, I wanted to make it as hard as possible for myself by using Rust so it might take a while. 🙃
                             </p>
                             <Link
                                 href={'https://brx-portfolio.vercel.app/'}
@@ -57,29 +53,15 @@ export default async function Dashboard() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Add New Item</CardTitle>
-                        <CardDescription>
-                            Enter the URL of the item you want to add here
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Input />
-                    </CardContent>
-                    <CardFooter className="flex flex-col space-y-3">
-                        <Button className="w-full">Add Item</Button>
-                        <div className="w-full text-right">
-                            <AddItemBtn />
-                        </div>
-                    </CardFooter>
-                </Card>
+                {/* <ScrapeProduct/> */}
+                
+               
             </div>
         </main>
     )
 }
 
-function HeartIcon(props) {
+function HeartIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -98,7 +80,7 @@ function HeartIcon(props) {
     )
 }
 
-function ListIcon(props) {
+function ListIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -122,7 +104,7 @@ function ListIcon(props) {
     )
 }
 
-function PlusIcon(props) {
+function PlusIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -142,7 +124,7 @@ function PlusIcon(props) {
     )
 }
 
-function ShareIcon(props) {
+function ShareIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -162,7 +144,7 @@ function ShareIcon(props) {
         </svg>
     )
 }
-function Grid3x3Icon(props) {
+function Grid3x3Icon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

@@ -1,7 +1,10 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
+    // Handle Cors
+    const res = NextResponse.next()
+    res.headers.append('Access-Control-Allow-Origin', '*')
     return await updateSession(request)
 }
 
